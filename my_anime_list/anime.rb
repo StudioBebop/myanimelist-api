@@ -5,7 +5,7 @@ module MyAnimeList
                   :members_score, :members_count, :favorited_count, :synopsis
     attr_accessor :listed_anime_id
     attr_reader :type, :status
-    attr_writer :genres, :tags, :other_titles, :manga_adaptations, :prequels, :sequels, :side_stories
+    attr_writer :genres, :tags, :other_titles, :manga_adaptations, :prequels, :sequels, :side_stories, :openings, :endings
 
     # These attributes are specific to a user-anime pair, probably should go into another model.
     attr_accessor :watched_episodes, :score
@@ -267,6 +267,14 @@ module MyAnimeList
       @tags ||= []
     end
 
+    def openings
+      @openings ||= []
+    end
+
+    def endings
+      @endings ||= []
+    end
+
     def manga_adaptations
       @manga_adaptations ||= []
     end
@@ -308,7 +316,9 @@ module MyAnimeList
         :listed_anime_id => listed_anime_id,
         :watched_episodes => watched_episodes,
         :score => score,
-        :watched_status => watched_status
+        :watched_status => watched_status,
+        :openings => openings,
+        :endings => endings
       }
     end
 
@@ -355,6 +365,10 @@ module MyAnimeList
           xml.tag tag
         end
 
+        openings.each do | opening |
+          xml.opening opening
+        end
+
         manga_adaptations.each do |manga|
           xml.manga_adaptation do |xml|
             xml.manga_id  manga[:manga_id]
@@ -397,6 +411,56 @@ module MyAnimeList
         doc = Nokogiri::HTML(response)
 
         anime = Anime.new
+
+        # Openings
+        openings_chunk = doc.to_s.split("Opening Theme</h2>")[-1].split("<h2>")[0]
+        openings_chunk = openings_chunk.gsub("<br>", "\n")
+        openings_chunk = Nokogiri::HTML openings_chunk
+        openings_chunk.text.split("\n").each do | line |
+          line = line.strip
+          next if line.length == 0
+          next if line == "more"
+
+          if line.include? "(eps"
+            line = line.split("(eps")[0].strip
+          end
+
+          if line =~ /^#/
+            line = line.split(":")
+            line.shift
+            line = line.join(":").strip
+          end
+
+          anime.openings << line
+        end
+        if anime.openings[-1] =~ / found, add themes.$/
+          anime.openings = []
+        end
+
+        # Endings
+        openings_chunk = doc.to_s.split("Ending Theme</h2>")[-1].split("<h2>")[0]
+        openings_chunk = openings_chunk.gsub("<br>", "\n")
+        openings_chunk = Nokogiri::HTML openings_chunk
+        openings_chunk.text.split("\n").each do | line |
+          line = line.strip
+          next if line.length == 0
+          next if line == "more"
+
+          if line.include? "(eps"
+            line = line.split("(eps")[0].strip
+          end
+
+          if line =~ /^#/
+            line = line.split(":")
+            line.shift
+            line = line.join(":").strip
+          end
+
+          anime.endings << line
+        end
+        if anime.endings[-1] =~ / found, add themes.$/
+          anime.endings = []
+        end
 
         # Anime ID.
         # Example:
