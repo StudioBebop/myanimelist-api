@@ -14,6 +14,7 @@ GEM
     curb (0.7.9)
     highline (1.6.2)
     json (1.2.3)
+    kgio (2.3.3)
     net-scp (1.0.4)
       net-ssh (>= 1.99.1)
     net-sftp (2.0.5)
@@ -27,6 +28,9 @@ GEM
       rack (~> 1.1)
       tilt (~> 1.1)
     tilt (1.1)
+    unicorn (3.6.2)
+      kgio (~> 2.3)
+      rack
 
 PLATFORMS
   ruby
@@ -40,3 +44,4 @@ DEPENDENCIES
   json (= 1.2.3)
   nokogiri
   sinatra
+  unicorn
