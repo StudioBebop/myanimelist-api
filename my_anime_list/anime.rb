@@ -421,14 +421,16 @@ module MyAnimeList
           next if line.length == 0
           next if line == "more"
 
-          if line.include? "(eps"
-            line = line.split("(eps")[0].strip
+          if line.include? "(ep"
+            line = line.split("(ep")[0].strip
           end
 
           if line =~ /^#/
-            line = line.split(":")
-            line.shift
-            line = line.join(":").strip
+            line = line.split("")
+            while line[0] != "\""
+              line.shift
+            end
+            line = line.join
           end
 
           anime.openings << line
@@ -446,14 +448,16 @@ module MyAnimeList
           next if line.length == 0
           next if line == "more"
 
-          if line.include? "(eps"
-            line = line.split("(eps")[0].strip
+          if line.include? "(ep"
+            line = line.split("(ep")[0].strip
           end
 
           if line =~ /^#/
-            line = line.split(":")
-            line.shift
-            line = line.join(":").strip
+            line = line.split("")
+            while line[0] != "\""
+              line.shift
+            end
+            line = line.join
           end
 
           anime.endings << line
