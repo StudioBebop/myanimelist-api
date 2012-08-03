@@ -175,6 +175,7 @@ module MyAnimeList
           anime.title = anime_title_node.text
           if image_node = results_row.at('td a img')
             anime.image_url = image_node['src']
+            anime.image_url = URLProcessor.process_url anime.image_url
           end
 
           table_cell_nodes = results_row.search('td')
@@ -485,6 +486,7 @@ module MyAnimeList
 
         if image_node = doc.at('div#content tr td div img')
           anime.image_url = image_node['src']
+          anime.image_url = URLProcessor.process_url anime.image_url
         end
 
         # -

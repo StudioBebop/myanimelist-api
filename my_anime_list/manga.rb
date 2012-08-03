@@ -175,6 +175,7 @@ module MyAnimeList
           manga.title = manga_title_node.text
           if image_node = results_row.at('td a img')
             manga.image_url = image_node['src']
+            manga.image_url = URLProcessor.process_url manga.image_url
           end
 
           table_cell_nodes = results_row.search('td')
@@ -390,6 +391,7 @@ module MyAnimeList
       # Image URL.
       if image_node = doc.at('div#content tr td div img')
         manga.image_url = image_node['src']
+        manga.image_url = URLProcessor.process_url manga.image_url
       end
 
       # -

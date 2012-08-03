@@ -33,6 +33,7 @@ module MyAnimeList
         manga.chapters          = manga_node.at('series_chapters').text.to_i
         manga.volumes           = manga_node.at('series_volumes').text.to_i
         manga.image_url         = manga_node.at('series_image').text
+        manga.image_url         = URLProcessor.process_url manga.image_url
         manga.listed_manga_id   = manga_node.at('my_id').text.to_i
         manga.volumes_read      = manga_node.at('my_read_volumes').text.to_i
         manga.chapters_read     = manga_node.at('my_read_chapters').text.to_i
