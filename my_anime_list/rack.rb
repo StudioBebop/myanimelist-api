@@ -40,6 +40,7 @@ module MyAnimeList
         curl.http_post(
           Curl::PostField.content('username', username),
           Curl::PostField.content('password', password),
+          Curl::PostField.content('sublogin', ' Login '),
           Curl::PostField.content('cookies', '1')
         )
 
